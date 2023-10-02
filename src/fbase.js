@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 /**
  * React app을 build하면,
@@ -18,4 +20,14 @@ const firebaseConfig = {
   };
 
 // Initialize Firebase
-export default initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth
+export const authService = {
+  auth: getAuth(app),
+  createUserWithEmailAndPassword: (auth, email, password) => createUserWithEmailAndPassword(auth, email, password),
+  signInWithEmailAndPassword: (auth, email, password) => signInWithEmailAndPassword(auth, email, password),
+  onAuthStateChanged: (auth, callback) => onAuthStateChanged(auth, callback)
+};
+
+export const dbService = getFirestore(app);
