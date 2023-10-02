@@ -1,34 +1,38 @@
 import { dbService } from "fbase";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 
-const Home = () => {
+const Home = ({ userObj }) => {
     const [twixxt, setTwixxt] = useState("");
     const [twixxts, setTwixxts] = useState([]);
 
+    /*
     const getTwixxts = async () => {
         const docSnap = await getDocs(collection(dbService, "twixxts"));
-
-        console.log(docSnap.size);
         
         docSnap.forEach(doc => {
             const twixxtObject = {
                 ...doc.data(),
-                id: doc.id,
+                id: doc.id
             }
             setTwixxts(prev => [twixxtObject, ...prev]);
         });
     };
+    */
 
     useEffect(() => {
-        getTwixxts();
+        const unsub = onSnapshot(collection(dbService, "twixxts"), snapshot => {
+            const twixxtArray = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            setTwixxts(twixxtArray);
+        });
     }, []);
 
     const onSubmit = async (event) => {
         event.preventDefault();
         const docRef = await addDoc(collection(dbService, "twixxts"), {
-            twixxt,
-            createdAt: Date.now()
+            text: twixxt,
+            createdAt: Date.now(),
+            createdBy: userObj.uid
         });
 
         setTwixxt("");
@@ -49,7 +53,7 @@ const Home = () => {
                 {twixxts.map(twixxt => {
                     return(
                         <div key={twixxt.id}>
-                            <h4>{twixxt.twixxt}</h4>
+                            <h4>{twixxt.text}</h4>
                         </div>
                     );
                 })}
