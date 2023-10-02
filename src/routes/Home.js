@@ -8,11 +8,17 @@ const Home = () => {
 
     const getTwixxts = async () => {
         const docSnap = await getDocs(collection(dbService, "twixxts"));
+
+        console.log(docSnap.size);
         
         docSnap.forEach(doc => {
-            setTwixxts(prev => [doc.data(), ...prev]);
+            const twixxtObject = {
+                ...doc.data(),
+                id: doc.id,
+            }
+            setTwixxts(prev => [twixxtObject, ...prev]);
         });
-    }
+    };
 
     useEffect(() => {
         getTwixxts();
@@ -39,6 +45,15 @@ const Home = () => {
                 <input type="text" value={twixxt} onChange={onChange} placeholder="What's on your mind?" maxLength={120} />
                 <input type="submit" value="Twixxt" />
             </form>
+            <div>
+                {twixxts.map(twixxt => {
+                    return(
+                        <div key={twixxt.id}>
+                            <h4>{twixxt.twixxt}</h4>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 };
