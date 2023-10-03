@@ -2,7 +2,7 @@ import { dbService } from "fbase";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 
-const Twixxt = ({ twixxtObj, isOwner }) => {
+const Twixxt = ({ twixxtObj, isOwner}) => {
     const [editing, setEditing] = useState(false);
     const [newTwixxt, setNewTwixxt] = useState(twixxtObj.text);
 
@@ -16,8 +16,8 @@ const Twixxt = ({ twixxtObj, isOwner }) => {
 
     const toggleEditing = () => setEditing(prev => !prev);
 
-    const onChange = (event) => { 
-        const {target: {value}}  = event;
+    const onChange = (event) => {
+        const { target: { value } } = event;
         setNewTwixxt(value);
     };
 
@@ -36,14 +36,20 @@ const Twixxt = ({ twixxtObj, isOwner }) => {
             {
                 editing ?
                     <>
-                        <form onSubmit={onSubmit}>
-                            <input type="text" value={newTwixxt} required onChange={onChange}/>
-                            <input type="submit" value="Update"/>
-                        </form>
-                        <button onClick={toggleEditing}>Cancel</button>
+                        {
+                            isOwner &&
+                            <>
+                                <form onSubmit={onSubmit}>
+                                    <input type="text" value={newTwixxt} required onChange={onChange} />
+                                    <input type="submit" value="Update" />
+                                </form>
+                                <button onClick={toggleEditing}>Cancel</button>
+                            </>
+                        }
                     </>
                     : <>
                         <h4>{twixxtObj.text}</h4>
+                        {twixxtObj.attachmentURL && <img src={twixxtObj.attachmentURL} width="50px" height="50px"/>}
                         {isOwner &&
                             <>
                                 <button onClick={onDeleteClick}>Delete</button>

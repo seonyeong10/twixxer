@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 /**
  * React app을 build하면,
@@ -31,3 +32,5 @@ export const authService = {
 };
 
 export const dbService = getFirestore(app);
+
+export const storageService = getStorage(app);
