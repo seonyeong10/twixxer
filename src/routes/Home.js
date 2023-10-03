@@ -1,3 +1,4 @@
+import Twixxt from "components/Twixxt";
 import { dbService } from "fbase";
 import { addDoc, collection, doc, getDocs, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -21,6 +22,7 @@ const Home = ({ userObj }) => {
     */
 
     useEffect(() => {
+        /** 실시간 조회 */
         const unsub = onSnapshot(collection(dbService, "twixxts"), snapshot => {
             const twixxtArray = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
             setTwixxts(twixxtArray);
@@ -52,9 +54,7 @@ const Home = ({ userObj }) => {
             <div>
                 {twixxts.map(twixxt => {
                     return(
-                        <div key={twixxt.id}>
-                            <h4>{twixxt.text}</h4>
-                        </div>
+                        <Twixxt key={twixxt.id} twixxtObj={twixxt} isOwner={twixxt.createdBy === userObj.uid} />
                     );
                 })}
             </div>
